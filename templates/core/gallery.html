@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Photo Gallery - DineEase{% endblock %}
+
+{% block content %}
+<!-- Gallery Hero Section -->
+<section class="py-5 bg-gradient-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">Photo Gallery</h1>
+                <p class="lead">Take a visual journey through our restaurant and culinary creations</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Grid -->
+<section class="py-5">
+    <div class="container">
+        {% if gallery_images %}
+            <div class="row">
+                {% for image in gallery_images %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="gallery-item">
+                        <img src="{{ image.image.url }}" 
+                             alt="{{ image.title }}" 
+                             class="img-fluid rounded shadow-sm" 
+                             style="height: 250px; width: 100%; object-fit: cover; cursor: pointer;"
+                             data-bs-toggle="modal" 
+                             data-bs-target="#imageModal{{ image.id }}">
+                        
+                        {% if image.caption %}
+                        <div class="gallery-caption mt-2">
+                            <h6 class="mb-1">{{ image.title }}</h6>
+                            <p class="text-muted small mb-0">{{ image.caption }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Modal for each image -->
+                <div class="modal fade" id="imageModal{{ image.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{ image.title }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <img src="{{ image.image.url }}" 
+                                     alt="{{ image.title }}" 
+                                     class="img-fluid rounded">
+                                {% if image.caption %}
+                                <p class="mt-3 text-muted">{{ image.caption }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <nav aria-label="Gallery pagination" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">&laquo; First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+                    
+                    <li class="page-item active">
+                        <span class="page-link">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                        </span>
+                    </li>
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+            
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-images fa-5x text-muted mb-4"></i>
+                <h3>Gallery Coming Soon</h3>
+                <p class="lead text-muted">We're preparing to share beautiful photos of our restaurant and dishes. Check back soon!</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h3 class="mb-4">See It in Person</h3>
+                <p class="lead mb-4">The photos are just a preview. Come experience the real atmosphere and taste our amazing cuisine!</p>
+                <a href="{% url 'reservations:reservation_form' %}" class="btn btn-primary btn-lg me-3">
+                    <i class="fas fa-calendar-alt me-2"></i>Book a Table
+                </a>
+                <a href="{% url 'menu:menu_list' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-utensils me-2"></i>View Menu
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.gallery-item {
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+}
+
+.gallery-item img {
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+.gallery-caption {
+    text-align: center;
+}
+
+.modal-body img {
+    max-height: 70vh;
+    object-fit: contain;
+}
+
+/* Lightbox effect for mobile */
+@media (max-width: 768px) {
+    .gallery-item img {
+        cursor: pointer;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Initialize tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
+{% endblock %}

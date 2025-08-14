@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Message Sent - DineEase{% endblock %}
+
+{% block content %}
+<!-- Success Hero Section -->
+<section class="py-5 bg-gradient-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">Message Sent Successfully!</h1>
+                <p class="lead">Thank you for reaching out to us. We'll get back to you soon!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Success Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="success-icon mb-4">
+                    <i class="fas fa-paper-plane fa-5x text-success"></i>
+                </div>
+                
+                <h2 class="mb-4">Your Message Has Been Received</h2>
+                <p class="lead mb-4">We've received your message and will respond within 24 hours during business days.</p>
+                
+                <div class="alert alert-info" role="alert">
+                    <h5 class="alert-heading"><i class="fas fa-info-circle me-2"></i>What Happens Next?</h5>
+                    <ul class="text-start mb-0">
+                        <li>You'll receive an automated confirmation email shortly</li>
+                        <li>Our team will review your message and respond within 24 hours</li>
+                        <li>For urgent matters, please call us directly</li>
+                        <li>We typically respond faster during business hours</li>
+                    </ul>
+                </div>
+                
+                <div class="row mt-5">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-calendar-alt fa-3x text-primary mb-3"></i>
+                                <h5>Book a Table</h5>
+                                <p class="text-muted">Ready to visit? Make a reservation for an unforgettable dining experience</p>
+                                <a href="{% url 'reservations:reservation_form' %}" class="btn btn-outline-primary">Book Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-utensils fa-3x text-primary mb-3"></i>
+                                <h5>Explore Our Menu</h5>
+                                <p class="text-muted">Take a look at our delicious offerings and plan your meal</p>
+                                <a href="{% url 'menu:menu_list' %}" class="btn btn-outline-primary">View Menu</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-5">
+                    <h4>Need Immediate Assistance?</h4>
+                    <p class="text-muted">For urgent matters or immediate questions, please call us directly.</p>
+                    
+                    {% if restaurant_info %}
+                    <div class="contact-info mt-4">
+                        <p class="mb-2">
+                            <i class="fas fa-phone me-2"></i>{{ restaurant_info.phone }}
+                        </p>
+                        <p class="mb-0">
+                            <i class="fas fa-envelope me-2"></i>{{ restaurant_info.email }}
+                        </p>
+                    </div>
+                    {% else %}
+                    <div class="contact-info mt-4">
+                        <p class="mb-2">
+                            <i class="fas fa-phone me-2"></i>(555) 123-4567
+                        </p>
+                        <p class="mb-0">
+                            <i class="fas fa-envelope me-2"></i>info@dineease.com
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mt-5">
+                    <a href="{% url 'core:home' %}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-home me-2"></i>Back to Home
+                    </a>
+                    <a href="{% url 'contact:contact_form' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-envelope me-2"></i>Send Another Message
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.success-icon {
+    animation: slideInDown 1s ease-out;
+}
+
+@keyframes slideInDown {
+    0% {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.contact-info {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+}
+</style>
+{% endblock %}

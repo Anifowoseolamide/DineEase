@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Menu - DineEase{% endblock %}
+
+{% block content %}
+<!-- Menu Hero Section -->
+<section class="py-5 bg-gradient-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">Our Menu</h1>
+                <p class="lead">Discover our carefully crafted dishes made with the finest ingredients</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Menu Categories -->
+<section class="py-5">
+    <div class="container">
+        {% if categories %}
+            {% for category in categories %}
+            <div class="menu-category mb-5">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h2 class="display-6 fw-bold text-center mb-3">{{ category.name }}</h2>
+                        {% if category.description %}
+                            <p class="text-center text-muted lead">{{ category.description }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    {% for item in category.menu_items.all %}
+                        {% if item.is_active %}
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="card h-100 menu-item shadow-sm" data-category="{{ category.slug }}">
+                                {% if item.image %}
+                                    <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+                                {% else %}
+                                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <i class="fas fa-utensils fa-3x text-white"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ item.name }}</h5>
+                                    <p class="card-text text-muted">{{ item.description }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="h5 text-primary mb-0">${{ item.price }}</span>
+                                        <div class="badges">
+                                            {% if item.is_vegetarian %}
+                                                <span class="badge bg-success me-1" data-bs-toggle="tooltip" title="Vegetarian">V</span>
+                                            {% endif %}
+                                            {% if item.is_gluten_free %}
+                                                <span class="badge bg-info me-1" data-bs-toggle="tooltip" title="Gluten Free">GF</span>
+                                            {% endif %}
+                                            {% if item.is_spicy %}
+                                                <span class="badge bg-danger me-1" data-bs-toggle="tooltip" title="Spicy">🌶️</span>
+                                            {% endif %}
+                                            {% if item.is_popular %}
+                                                <span class="badge bg-warning me-1" data-bs-toggle="tooltip" title="Popular">⭐</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent border-0">
+                                    <a href="{% url 'menu:menu_detail' item.slug %}" class="btn btn-outline-primary btn-sm w-100">
+                                        <i class="fas fa-info-circle me-2"></i>View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-utensils fa-5x text-muted mb-4"></i>
+                <h3>Menu Coming Soon</h3>
+                <p class="lead text-muted">We're working hard to bring you our amazing menu. Check back soon!</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h3 class="mb-4">Ready to Experience Our Cuisine?</h3>
+                <p class="lead mb-4">Book a table and enjoy our delicious dishes in our beautiful restaurant setting.</p>
+                <a href="{% url 'reservations:reservation_form' %}" class="btn btn-primary btn-lg me-3">
+                    <i class="fas fa-calendar-alt me-2"></i>Book a Table
+                </a>
+                <a href="{% url 'contact:contact_form' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-envelope me-2"></i>Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.menu-category {
+    border-bottom: 2px solid #f8f9fa;
+    padding-bottom: 3rem;
+}
+
+.menu-category:last-child {
+    border-bottom: none;
+}
+
+.menu-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+}
+
+.menu-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.menu-item .card-img-top {
+    transition: transform 0.3s ease;
+}
+
+.menu-item:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+</style>
+{% endblock %}
